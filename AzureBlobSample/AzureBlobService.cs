@@ -3,15 +3,13 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.DataMovement;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AzureBlobSample
 {
-    /// <summary>
-    /// AzureBlobService
-    /// </summary>
     public class AzureBlobService
     {
         string _SourceConectString { get; set; }
@@ -24,14 +22,14 @@ namespace AzureBlobSample
         /// 印出Container
         /// </summary>
         /// <param name="containerName">container name</param>
-        public void PrintContainer(string containerName, string blobDirectoryUrn = "")
+        public void PrintContainer(string containerName, string blobDirectoryURI = "")
         {
             CloudStorageAccount sourceAccount = CloudStorageAccount.Parse(_SourceConectString);
             CloudBlobClient client = sourceAccount.CreateCloudBlobClient();
             CloudBlobContainer container = client.GetContainerReference(containerName);
-            if (string.IsNullOrEmpty(blobDirectoryUrn) == false)
+            if (string.IsNullOrEmpty(blobDirectoryURI) == false)
             {
-                GotoInnerBlobs(container.GetDirectoryReference(blobDirectoryUrn).ListBlobs());
+                GotoInnerBlobs(container.GetDirectoryReference(blobDirectoryURI).ListBlobs());
             }
             else
             {
@@ -63,22 +61,22 @@ namespace AzureBlobSample
         /// <summary>
         /// 移動目標位置
         /// </summary>
-        /// <param name="sourceUrn">來源位置</param>
-        /// <param name="destinationUrn">目標位置</param>
-        public void MoveBlobFile(string sourceUrn, string destinationUrn)
+        /// <param name="sourceURI">來源位置</param>
+        /// <param name="destinationURI">目標位置</param>
+        public void MoveBlobFile(string sourceURI, string destinationURI)
         {
-            if (string.IsNullOrEmpty(sourceUrn) == false && string.IsNullOrEmpty(destinationUrn) == false)
+            if (string.IsNullOrEmpty(sourceURI) == false && string.IsNullOrEmpty(destinationURI) == false)
             {
                 CloudStorageAccount sourceAccount = CloudStorageAccount.Parse(_SourceConectString);
                 CloudBlobClient client = sourceAccount.CreateCloudBlobClient();
-                CloudBlobContainer container = client.GetContainerReference(sourceUrn);
-                CloudBlockBlob sourceBlockBlob = container.GetBlockBlobReference(sourceUrn);
-                CloudBlockBlob destinationBlockBlob = container.GetBlockBlobReference(sourceUrn);
+                CloudBlobContainer container = client.GetContainerReference(sourceURI);
+                CloudBlockBlob sourceBlockBlob = container.GetBlockBlobReference(sourceURI);
+                CloudBlockBlob destinationBlockBlob = container.GetBlockBlobReference(sourceURI);
                 TransferManager.CopyAsync(sourceBlockBlob, destinationBlockBlob, true/* isServiceCopy */);
             }
             else
             {
-                throw new Exception("URN is not exist");
+                throw new Exception("URI is not exist");
             }
         }
     }
