@@ -9,10 +9,13 @@ using System.Threading.Tasks;
 
 namespace AzureBlobSample
 {
-    public class AzueBlobService
+    /// <summary>
+    /// AzureBlobService
+    /// </summary>
+    public class AzureBlobService
     {
         string _SourceConectString { get; set; }
-        public AzueBlobService(string sourceConectString)
+        public AzureBlobService(string sourceConectString)
         {
             _SourceConectString = sourceConectString;
         }
