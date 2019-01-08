@@ -61,15 +61,16 @@ namespace AzureBlobSample
         /// <summary>
         /// 移動目標位置
         /// </summary>
+        /// <param name="containerName">Container 名稱</param>
         /// <param name="sourceURI">來源位置</param>
         /// <param name="destinationURI">目標位置</param>
-        public void MoveBlobFile(string sourceURI, string destinationURI)
+        public void MoveBlobFile(string containerName, string sourceURI, string destinationURI)
         {
             if (string.IsNullOrEmpty(sourceURI) == false && string.IsNullOrEmpty(destinationURI) == false)
             {
                 CloudStorageAccount sourceAccount = CloudStorageAccount.Parse(_SourceConectString);
                 CloudBlobClient client = sourceAccount.CreateCloudBlobClient();
-                CloudBlobContainer container = client.GetContainerReference(sourceURI);
+                CloudBlobContainer container = client.GetContainerReference(containerName);
                 CloudBlockBlob sourceBlockBlob = container.GetBlockBlobReference(sourceURI);
                 CloudBlockBlob destinationBlockBlob = container.GetBlockBlobReference(sourceURI);
                 TransferManager.CopyAsync(sourceBlockBlob, destinationBlockBlob, true/* isServiceCopy */);
@@ -78,6 +79,22 @@ namespace AzureBlobSample
             {
                 throw new Exception("URI is not exist");
             }
+        }
+        /// <summary>
+        /// 上傳檔案
+        /// </summary>
+        /// <param name="stream">檔案串流</param>
+        /// <param name="containerName">Container 名稱</param>
+        /// <param name="URI">URI(預期路徑.檔案名稱.副檔名)</param>
+        /// <param name="extension">副檔名</param>
+        public void Upload(Stream stream, string containerName, string URI, string extension)
+        {
+            CloudStorageAccount sourceAccount = CloudStorageAccount.Parse(_SourceConectString);
+            CloudBlobClient client = sourceAccount.CreateCloudBlobClient();
+            CloudBlobContainer container = client.GetContainerReference(containerName);
+            CloudBlockBlob cloudBlockBlob = container.GetBlockBlobReference(URI);
+            cloudBlockBlob.Properties.ContentType = extension;
+            cloudBlockBlob.UploadFromStream(stream);
         }
     }
 }
