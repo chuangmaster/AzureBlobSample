@@ -16,7 +16,11 @@ namespace AzureBlobSample
             service.PrintContainer("MyContainer", "Directory1");
 
             //MoveBlobFile
-            service.MoveBlobFile("Directory1/2018122001/03/1-1.jpg", "Directory2/1-1.jpg");
+            //預期從ContainerName/Directory1/2018122001/03/1-1.jpg 移動到 ContainerName/Directory2/1-1.jpg
+            service.MoveBlobFile("ContainerName","Directory1/2018122001/03/1-1.jpg", "Directory2/1-1.jpg");
+
+
+
             Console.Read();
         }
     }
